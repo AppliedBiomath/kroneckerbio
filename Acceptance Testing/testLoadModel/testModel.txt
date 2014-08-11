@@ -1,0 +1,36 @@
+## A simple test model ##
+#
+# Author: Joshua Apgar
+# Email:  apgar@appliedbiomath.com
+
+
+% Compartments testModel
+plasma 3 5
+tissue 3 1
+
+% States plasma
+a 5
+b 0
+c c0=5
+
+% States tissue
+a 5
+b 0
+c c0=1
+
+
+% Outputs
+A       plasma\.a = plasma
+B       plasma.b
+Atot    plasma.a plasma.b
+
+% Parameters
+kfwd    1
+krev    1
+
+% Seeds
+c0 10
+
+% Reactions
+plasma.a    0   plasma.b    0   kfwd    krev    "a <--> b"
+tissue.a    0   tissue.b    0   kfwd    krev    "a <--> b"
