@@ -114,7 +114,7 @@ nu = numel(m.Inputs);
 m.nu = nu;
 uNames = vec({m.Inputs.Name});
 uNamesFull = strcat(vec({m.Inputs.Compartment}), '.', uNames);
-m.vuInd = lookup(vec({m.Inputs.Compartment}), vNames);
+m.vuInd = kblookup(vec({m.Inputs.Compartment}), vNames);
 
 %% Place states
 nxNew = m.add.nx;
@@ -144,7 +144,7 @@ nx = numel(m.States);
 m.nx = nx;
 xNames = vec({m.States.Name});
 xNamesFull = strcat(vec({m.States.Compartment}), '.', xNames);
-m.vxInd = lookup(vec({m.States.Compartment}), vNames);
+m.vxInd = kblookup(vec({m.States.Compartment}), vNames);
 
 %% Place outputs
 nyNew = m.add.ny;
@@ -276,7 +276,9 @@ for ir = 1:nrNew
 
         % Check for errors
         if (any(reactantsExist) && all(reactantsFound) && any(~productsFound))
-            error('KroneckerBio:FinalizeModel:MissingProduct', 'Reaction %s (#%i) has the necessary reactants in compartment %s but not the necessary products', m.add.Reactions(ir).Names{1}, ir, possibleComp{iv})
+            error('KroneckerBio:FinalizeModel:MissingProduct', ...
+                'Reaction %s (#%i) has the necessary reactants in compartment %s but not the necessary products', ...
+                m.add.Reactions(ir).Name, ir, possibleComp{iv})
         end
         
         % Check if this reaction takes place
@@ -309,7 +311,7 @@ for ir = 1:nrNew
     
     % Warn if no compartment had the species for this reaction specification
     if ~aReactionWasFound
-        warning('KroneckerBio:FinalizeModel:UnusedReaction', 'Reaction %s (#%i) was not found to take place in any compartment', m.add.Reactions(ir).Names{1}, ir)
+        warning('KroneckerBio:FinalizeModel:UnusedReaction', 'Reaction %s (#%i) was not found to take place in any compartment', m.add.Reactions(ir).Name, ir)
     end
 end
 
@@ -365,7 +367,7 @@ for ix = 1:nx
     % Add seed entries
     for i = 1:size(seed_value,1)
         seed_index = find(strcmp(seed_value{i,1}, sNames));
-        assert(numel(seed_index) == 1, 'KroneckerBio:FinalizeModel:InvalidSeedName', ['Species ' xNamesFull{ix} ' has an invalid seed ' seed_value])
+        assert(numel(seed_index) == 1, 'KroneckerBio:FinalizeModel:InvalidSeedName', ['Species ' xNamesFull{ix} ' has an invalid seed ' seed_value{i,1}])
         
         ndx0dsEntries = ndx0dsEntries + 1;
         
